@@ -6,13 +6,18 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     tools:context="stairs.planningdev.twitterapp.TweetActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
+    </LinearLayout>
     <EditText
         android:id="@+id/tweet_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:layout_weight="1"
+        android:layout_weight="5"
         android:background="@null"/>
     <Button
         android:id="@+id/send_button"
