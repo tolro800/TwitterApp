@@ -5,9 +5,11 @@ package stairs.planningdev.twitterapp;
  */
 
 public class TweetList {
+    // リスト自体のID(Adapterで必須)
     long id;
     private String userName;
     private String userId;
+    // アイコン画像のリソースID
     private int iconResId;
     private String tweet;
 

@@ -45,13 +45,17 @@ public class TweetAdapter extends BaseAdapter {
 
     @Override
     public View getView(int index, View convertView, ViewGroup parent) {
+        // LayoutInflater:レイアウトファイルを参照してビューを作る
         convertView = mlayoutInflater.inflate(R.layout.row_tweet,parent,false);
-
+        // アイコン画像のリソースIDセット
         ((ImageView)convertView.findViewById(R.id.icon_user)).setImageResource(mtweetList.get(index).getIconResId());
+        // ユーザー名,ユーザーIDセット
         ((TextView)convertView.findViewById(R.id.tweet_user)).setText(  mtweetList.get(index).getUserName() + " @"
                                                                         + mtweetList.get(index).getUserId());
+        // ツイート内容セット
         ((TextView)convertView.findViewById(R.id.tweet_text)).setText(mtweetList.get(index).getTweet());
 
+        // 一行分のレイアウトをListViewに送る
         return convertView;
     }
 }
