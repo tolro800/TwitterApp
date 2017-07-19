@@ -1,12 +1,16 @@
 package stairs.planningdev.twitterapp;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by nato on 2017/06/26.
  */
 
-public class TweetList {
+public class TweetList extends RealmObject{
     // リスト自体のID(Adapterで必須)
-    long id;
+    @PrimaryKey
+    private long id;
     private String userName;
     private String userId;
     // アイコン画像のリソースID

@@ -13,6 +13,10 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
+
 import static android.app.Activity.RESULT_OK;
 
 public class TweetFragment extends Fragment {
@@ -33,6 +37,9 @@ public class TweetFragment extends Fragment {
     private ArrayList<TweetList> mTweetList;
     // ツイート入力画面へ遷移するボタン
     private ImageButton mTweetButton;
+    // Realm用の変数とPrimaryKey用のID変数(ツイート追加するごとにインクリメント)
+    private Realm realm;
+    private int id;
 
     public TweetFragment() {
         // Required empty public constructor
@@ -59,6 +66,8 @@ public class TweetFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        realm = Realm.getDefaultInstance();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -74,6 +83,10 @@ public class TweetFragment extends Fragment {
 
         mTweetAdapter = new TweetAdapter(getContext());
         mTweetList = new ArrayList<>();
+        //Realmからツイートデータ取得
+        RealmResults<TweetList> results = realm.where(TweetList.class).findAll();
+        for(int i=0;i<results.size();i++) mTweetList.add(results.get(i));
+        id = results.size();
         mTweetAdapter.setTweetList(mTweetList);
         mTLList.setAdapter(mTweetAdapter);
 
@@ -91,19 +104,32 @@ public class TweetFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode,int resultCode, Intent intent) {
-        String strTweet;
         super.onActivityResult(requestCode, resultCode, intent);
+
+        String strTweet;
 
         // リストビュー(カスタムレイアウト)時の処理
         if (resultCode == RESULT_OK) {
             strTweet = intent.getStringExtra("TWEET_RESULT");
-            TweetList tweet = new TweetList();
+            //tweetをrealmへ書き込むトランザクション実行
+            realm.beginTransaction();
+            //RealmObjectとしてTweetListをインスタンス化
+            TweetList tweet = realm.createObject(TweetList.class,id++);
             tweet.setIconResId(R.drawable.tweet);
             tweet.setUserName("HogeHogeo");
             tweet.setUserId("hoge_hoge");
             tweet.setTweet(strTweet);
+            realm.commitTransaction();
+
             mTweetList.add(tweet);
             mTweetAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 }
